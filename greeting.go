@@ -5,8 +5,7 @@ import (
 	"strings"
 )
 
-// Hello returns a greeting for name. The name is trimmed of surrounding
-// whitespace; an empty or whitespace-only name greets "World".
+// Hello returns a greeting.
 func Hello(name string) string {
 	name = strings.TrimSpace(name)
 	if name == "" {
