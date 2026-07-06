@@ -15,7 +15,7 @@ func TestHandler(t *testing.T) {
 		wantStatus int
 		wantBody   string
 	}{
-		{"named", http.MethodGet, "/hello/Florin", http.StatusOK, "Hello, Florin!"},
+		{"named", http.MethodGet, "/hello/Pavel", http.StatusOK, "Hello, Pavel!"},
 		{"trailing slash", http.MethodGet, "/hello/", http.StatusOK, "Hello, World!"},
 		{"no slash", http.MethodGet, "/hello", http.StatusOK, "Hello, World!"},
 		{"non-GET", http.MethodPost, "/hello/x", http.StatusMethodNotAllowed, ""},
