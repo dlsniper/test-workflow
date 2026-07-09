@@ -4,6 +4,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"testing"
 )
 
@@ -19,6 +20,7 @@ func TestHandler(t *testing.T) {
 		{"trailing slash", http.MethodGet, "/hello/", http.StatusOK, "Hello, World!"},
 		{"no slash", http.MethodGet, "/hello", http.StatusOK, "Hello, World!"},
 		{"non-GET", http.MethodPost, "/hello/x", http.StatusMethodNotAllowed, ""},
+		{"random non-GET", http.MethodPost, "/random/number", http.StatusMethodNotAllowed, ""},
 		{"unknown", http.MethodGet, "/nope", http.StatusNotFound, ""},
 	}
 
@@ -39,5 +41,26 @@ func TestHandler(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+func TestRandomNumber(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/random/number", nil)
+	rec := httptest.NewRecorder()
+	Handler().ServeHTTP(rec, req)
+
+	if rec.Code != http.StatusOK {
+		t.Fatalf("status = %d, want %d", rec.Code, http.StatusOK)
+	}
+	if ct := rec.Header().Get("Content-Type"); ct != "text/plain; charset=utf-8" {
+		t.Errorf("Content-Type = %q, want %q", ct, "text/plain; charset=utf-8")
+	}
+	body, _ := io.ReadAll(rec.Result().Body)
+	n, err := strconv.Atoi(string(body))
+	if err != nil {
+		t.Fatalf("body = %q, not an integer: %v", body, err)
+	}
+	if n < 0 || n > 1_000_000 {
+		t.Errorf("number = %d, out of range [0, 1000000]", n)
 	}
 }
