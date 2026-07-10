@@ -15,6 +15,7 @@ func main() {
 	addr := flag.String("addr", ":8080", "listen address")
 	flag.Parse()
 
+	log.Printf("Hello, World!")
 	fmt.Printf("random number: %d\n", rand.IntN(10))
 
 	log.Printf("listening on %s", *addr)
